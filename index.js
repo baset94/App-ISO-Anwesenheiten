@@ -2,6 +2,20 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
 
+// CSP-Header für die gesamte App setzen
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+    "script-src 'self' 'unsafe-inline'; " +
+    "style-src 'self' 'unsafe-inline'; " +
+    "img-src 'self' data: https:; " +
+    "font-src 'self' data:; " +
+    "connect-src 'self' https://n8n.autoprozessagentur.cloud;"
+  );
+  next();
+});
+
 app.use(express.static('public'));
 
 app.post('/api/trigger-workflow', express.json(), async (req, res) => {
